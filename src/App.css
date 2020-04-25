@@ -36,3 +36,54 @@
     transform: rotate(360deg);
   }
 }
+
+table.board {
+  width: 125px;
+  height: 125px;  
+}
+table.X, table.O {
+  font-size: x-large;
+  width: 125px;
+  height: 125px;
+}
+
+table.X td, table.O td {
+  font-size: 60pt;
+  text-align: center;
+}
+
+table.X {
+  color: lightskyblue;
+}
+table.O {
+  color: lightsalmon;
+}
+
+div.X, div.O {
+  font-weight: bold;
+  width: 40px;
+  height: 40px;
+}
+div.winner {
+  font-size: 40pt;
+  vertical-align: middle;
+  width: 450px;
+  height: 450px;
+}
+div.X, .playerTurn.X {
+  color: lightskyblue;
+}
+div.O, .playerTurn.O {
+  color: lightsalmon;
+}
+button {
+  width: 40px;
+  height: 40px;
+}
+button:disabled {
+  opacity: 50%;
+}
+
+tfoot .playerTurn {
+  text-align: center;
+}
