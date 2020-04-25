@@ -13,58 +13,58 @@ class Game extends Component {
   onCellChosen = (cell) => {
     console.log("cell chosen", cell, "- state:", this.state.boards[cell]);
     if (this.state.boards[cell] === "") {
-        this.setState({ lastCell: cell })
+        this.setState({ lastCell: cell });
     } else {
-        this.setState({ lastCell: -1 })
+        this.setState({ lastCell: -1 });
     }
     
     if (this.state.player === "X") {
-      this.setState({ player: "O" })
+      this.setState({ player: "O" });
     } else {
-      this.setState({ player: "X" })
+      this.setState({ player: "X" });
     }
   }
 
   onBoardWon = (board, winner) => {
-    let boards = this.state.boards
-    boards[board] = winner
-    this.setState({ boards: boards })
-    console.log("setting board", board, "to", winner)
-    this.checkGameWon()
+    let boards = this.state.boards;
+    boards[board] = winner;
+    this.setState({ boards: boards });
+    console.log("setting board", board, "to", winner);
+    this.checkGameWon();
   }
 
   isCellEnabled = (cell) => {
-    return this.state.lastCell === cell || this.state.lastCell === -1 //&& myPlayer === player
+    return this.state.lastCell === cell || this.state.lastCell === -1; //&& myPlayer === player
   }
 
   checkGameWon = () => {
-    const r = this.state.boards
-    let winner = this.state.winner
+    const r = this.state.boards;
+    let winner = this.state.winner;
     // check rows
     if (r[0] !== "" && r[0] === r[1] && r[0] === r[2]) {
-      winner = r[0]
+      winner = r[0];
     } else if (r[3] !== "" && r[3] === r[4] && r[3] === r[5]) {
-      winner = r[3]
+      winner = r[3];
     } else if (r[6] !== "" && r[6] === r[7] && r[6] === r[8]) {
-      winner = r[6]
+      winner = r[6];
     }
     // check columns
     else if (r[0] !== "" && r[0] === r[3] && r[0] === r[6]) {
-      winner = r[0]
+      winner = r[0];
     } else if (r[1] !== "" && r[1] === r[4] && r[1] === r[7]) {
-      winner = r[1]
+      winner = r[1];
     } else if (r[2] !== "" && r[2] === r[5] && r[2] === r[8]) {
-      winner = r[2]
+      winner = r[2];
     }
     // check crosses
     else if (r[0] !== "" && r[0] === r[4] && r[0] === r[8]) {
-      winner = r[0]
+      winner = r[0];
     } else if (r[2] !== "" && r[2] === r[4] && r[2] === r[6]) {
-      winner = r[2]
+      winner = r[2];
     }
 
-    this.setState({ winner: winner })
-    return winner !== ""
+    this.setState({ winner: winner });
+    return winner !== "";
   }
 
   renderBoard(cell) {
