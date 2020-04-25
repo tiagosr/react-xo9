@@ -64,16 +64,14 @@ div.X, div.O {
   width: 40px;
   height: 40px;
 }
-div.winner {
+td.winner {
   font-size: 40pt;
   vertical-align: middle;
-  width: 450px;
-  height: 450px;
 }
-div.X, .playerTurn.X {
+div.X, td.X, .playerTurn.X {
   color: lightskyblue;
 }
-div.O, .playerTurn.O {
+div.O, td.O, .playerTurn.O {
   color: lightsalmon;
 }
 button {

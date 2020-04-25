@@ -3,7 +3,6 @@ import BoardCell from './boardCell';
 
 class Board extends Component {
   state = {
-    cell: this.props.cell,
     rows: Array(9).fill(""),
     winner: ""
   };
@@ -43,17 +42,14 @@ class Board extends Component {
     newRows[cell] = owner
     this.setState({rows: newRows});
     const winner = this.checkBoardWon()
-    if(winner !== "") {
-        this.props.onBoardWon(this.props.cell, winner)
-    }
-    this.props.onCellChosen(cell);
+    this.props.onCellChosen(this.props.board, cell, winner);
   }
 
   renderBoardCell(cell) {
       return (
         <BoardCell
           player={this.props.player}
-          board={this.props.cell}
+          board={this.props.board}
           cell={cell}
           enabled={this.props.enabled}
           onCellChosen={this.onCellChosen}

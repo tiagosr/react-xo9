@@ -10,7 +10,17 @@ class Game extends Component {
     winner: "",
   };
 
-  onCellChosen = (cell) => {
+  onCellChosen = (board, cell, winner) => {
+    if (this.state.winner !== "")
+    {
+        this.setState({ lastCell: -2 });
+        return;
+    } else if (winner !== "") {
+        this.onBoardWon(board, winner)
+        if (this.checkGameWon()) {
+            return;
+        }
+    }
     console.log("cell chosen", cell, "- state:", this.state.boards[cell]);
     if (this.state.boards[cell] === "") {
         this.setState({ lastCell: cell });
@@ -30,11 +40,10 @@ class Game extends Component {
     boards[board] = winner;
     this.setState({ boards: boards });
     console.log("setting board", board, "to", winner);
-    this.checkGameWon();
   }
 
   isCellEnabled = (cell) => {
-    return this.state.lastCell === cell || this.state.lastCell === -1; //&& myPlayer === player
+    return this.state.lastCell === cell || this.state.lastCell === -1; //&& this.state.myPlayer === this.state.player
   }
 
   checkGameWon = () => {
@@ -63,29 +72,41 @@ class Game extends Component {
       winner = r[2];
     }
 
-    this.setState({ winner: winner });
+    this.setState({ winner: winner, lastCell: winner===""?this.state.lastCell:-2 });
     return winner !== "";
   }
 
-  renderBoard(cell) {
+  renderBoard(board) {
     return (
       <Board
         player={this.state.player}
-        cell={cell}
+        board={board}
         onCellChosen={this.onCellChosen}
-        onBoardWon={this.onBoardWon}
         enabled={this.isCellEnabled}
       />
     );
   }
 
-  render() {
+  renderFooter() {
     if (this.state.winner !== "") {
-        return <div class={"winner "+this.state.winner}>{this.state.winner} is the winner!</div>
+        return (
+          <td className={"winner " + this.state.winner} colSpan={3}>
+            {this.state.winner} is the winner!
+          </td>
+        );
     } else {
         return (
-        <table>
-            <tbody>
+          <td className={"playerTurn " + this.state.player} colSpan={3}>
+            {this.state.player}, your turn
+          </td>
+        );
+    }
+  }
+
+  render() {
+    return (
+    <table>
+        <tbody>
             <tr>
                 {this.renderBoard(0)}
                 {this.renderBoard(1)}
@@ -101,14 +122,12 @@ class Game extends Component {
                 {this.renderBoard(7)}
                 {this.renderBoard(8)}
             </tr>
-            </tbody>
-            <tfoot>
-        <tr><td className={"playerTurn "+this.state.player} colSpan={3}>{this.state.player}, your turn</td></tr>
-            </tfoot>
-        </table>
-        );
-
-    }
+        </tbody>
+        <tfoot>
+            <tr>{this.renderFooter()}</tr>
+        </tfoot>
+    </table>
+    );
   }
 }
  
