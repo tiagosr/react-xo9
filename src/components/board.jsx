@@ -38,7 +38,7 @@ class Board extends Component {
     return winner
   }
 
-  handleCellChosen(cell, owner) {
+  onCellChosen = (cell, owner) => {
     let newRows = this.state.rows;
     newRows[cell] = owner
     this.setState({rows: newRows});
@@ -56,7 +56,7 @@ class Board extends Component {
           board={this.props.cell}
           cell={cell}
           enabled={this.props.enabled}
-          onCellChosen={this.handleCellChosen.bind(this)}
+          onCellChosen={this.onCellChosen}
         />
       );
   }

@@ -10,7 +10,7 @@ class Game extends Component {
     winner: "",
   };
 
-  onCellChosen(cell) {
+  onCellChosen = (cell) => {
     console.log("cell chosen", cell, "- state:", this.state.boards[cell]);
     if (this.state.boards[cell] === "") {
         this.setState({ lastCell: cell })
@@ -25,7 +25,7 @@ class Game extends Component {
     }
   }
 
-  onBoardWon(board, winner) {
+  onBoardWon = (board, winner) => {
     let boards = this.state.boards
     boards[board] = winner
     this.setState({ boards: boards })
@@ -33,11 +33,11 @@ class Game extends Component {
     this.checkGameWon()
   }
 
-  isCellEnabled(cell) {
+  isCellEnabled = (cell) => {
     return this.state.lastCell === cell || this.state.lastCell === -1 //&& myPlayer === player
   }
 
-  checkGameWon() {
+  checkGameWon = () => {
     const r = this.state.boards
     let winner = this.state.winner
     // check rows
@@ -72,9 +72,9 @@ class Game extends Component {
       <Board
         player={this.state.player}
         cell={cell}
-        onCellChosen={this.onCellChosen.bind(this)}
-        onBoardWon={this.onBoardWon.bind(this)}
-        enabled={this.isCellEnabled.bind(this)}
+        onCellChosen={this.onCellChosen}
+        onBoardWon={this.onBoardWon}
+        enabled={this.isCellEnabled}
       />
     );
   }

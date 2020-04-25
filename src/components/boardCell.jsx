@@ -6,20 +6,20 @@ class BoardCell extends Component {
     empty: true,
   };
 
-  handleClick(cell) {
+  onClick = () => {
     if (!this.props.enabled(this.props.board)) return;
     this.setState({
       empty: false,
       owner: this.props.player,
     });
-    this.props.onCellChosen(cell, this.props.player);
+    this.props.onCellChosen(this.props.cell, this.props.player);
   }
 
   renderButton() {
     if (this.state.empty && this.props.enabled) {
       if (this.props.enabled(this.props.board)) {
         return (
-          <button onClick={this.handleClick.bind(this, this.props.cell)}>
+          <button onClick={this.onClick}>
             &nbsp;
           </button>
         );
