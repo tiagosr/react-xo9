@@ -1,3 +1,13 @@
+# XO9: Space Tic-Tac-Toe
+
+An implementation of [Ultimate Tic-Tac-Toe](https://mathwithbaddrawings.com/2013/06/16/ultimate-tic-tac-toe/) written using React.js.
+
+Way more interesting than your usual tic-tac-toe game 😁
+
+Currently both players share the same controls (mouse clicks or screen taps or whatever) and the game doesn't reset on victory. Working on it 👍
+
+------
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
