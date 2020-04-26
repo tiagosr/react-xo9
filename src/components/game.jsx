@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Board from './board'
+import socketIoClient from "socket.io-client";
+import Board from './board';
 
 class Game extends Component {
   state = {
@@ -8,7 +9,16 @@ class Game extends Component {
     lastCell: -1,
     boards: Array(9).fill(""),
     winner: "",
+    socket: null
   };
+
+  componentDidMount() {
+    const socket = socketIoClient(this.props.endpoint);
+    socket.on('your-move', (player)=> {
+      this.setState({player: player});
+    });
+    this.setState({socket: socket});
+  }
 
   onCellChosen = (board, cell, winner) => {
     if (this.state.winner !== "")
