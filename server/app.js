@@ -29,9 +29,12 @@ io.on("connection", (socket) => {
         let room_token = chance.word();
         connections[socket.id].room = room_token;
         connections[socket.id].name = name;
+        connections[socket.id].player = "X";
         rooms[room_token] = [{ player: connections[socket.id], id: socket.id }];
         socket.join(room_token);
         socket.emit('room', room_token, 'X');
+        console.log("new game requested by", name);
+        console.log("room token:", room_token);
     })
 
     socket.on('join-game', (room, name) => {
@@ -42,21 +45,23 @@ io.on("connection", (socket) => {
           connections[socket.id].player = "O";
           rooms[room].push({player: connections[socket.id], id: socket.id });
           socket.emit("room", room, "O");
-          io.to(room).emit("players", )
+          io.to(room).emit("players", rooms[room].map((entry) => ({name: entry.player.name, player: entry.player.player})));
           io.to(room).emit("your-move", "X");
         } else {
-          socket.error("no-room");
+          console.log("room not found", room)
+          socket.emit("no-room");
         }
     })
 
-    socket.on("move", (move) => {
+    socket.on("move", (board, cell) => {
         const room = connections[socket.id].room;
         const player = connections[socket.id].player;
+        console.log("move:", player, board, cell);
         if (room) {
-          io.to(room).emit("move", player, move);
+          io.to(room).emit("move", player, board, cell);
           io.to(room).emit("your-move", other_player[player]);
         } else {
-          socket.error("no-room");
+          socket.emit("no-room");
         }
     })
 

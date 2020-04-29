@@ -4,12 +4,15 @@ import Board from './board';
 
 class Game extends Component {
   state = {
-    player: "X",
+    player: "",
     myPlayer: "X",
+    players: {},
+    gameKey: "",
     lastCell: -1,
     boards: Array(9).fill(""),
     winner: "",
-    socket: null
+    socket: null,
+    boardSetters: Array(9)
   };
 
   componentDidMount() {
@@ -17,10 +20,50 @@ class Game extends Component {
     socket.on('your-move', (player)=> {
       this.setState({player: player});
     });
+    socket.on('room', (roomName, player) => {
+        this.setState({gameKey: roomName, myPlayer: player});
+    });
+    socket.on('no-room', ()=>{
+        socket.disconnect()
+        this.props.failedToConnect("no game found");
+    });
+    socket.on('move', (player, board, cell) => {
+        console.log("move:", player, board, cell)
+        this.setCell(board, cell, player, false);
+    })
+
+    //this.setState({players: })
+    if (this.props.gameKey) {
+        this.setState({
+            myPlayer: "O",
+            players: {player: "O", name: this.props.playerName}
+        });
+        socket.emit('join-game', this.props.gameKey, this.props.playerName);
+    } else {
+        this.setState({
+            myPlayer: "X",
+            players: {player: "X", name: this.props.playerName}
+        });
+        socket.emit("new-game", this.props.playerName);
+    }
     this.setState({socket: socket});
   }
 
-  onCellChosen = (board, cell, winner) => {
+  setCell = (board, cell, owner) => {
+      console.log("Game.setCell():", board, cell, owner);
+      this.state.boardSetters[board](cell, owner);
+  }
+
+  onConfigCellSetter = (board, setter) => {
+    let setters = this.state.boardSetters;
+    setters[board] = setter
+    this.setState({boardSetters: setters})
+  }
+
+  onCellChosen = (board, cell, winner, authority) => {
+    if (authority) {
+        this.state.socket.emit("move", board, cell);
+    }
     if (this.state.winner !== "")
     {
         this.setState({ lastCell: -2 });
@@ -53,7 +96,7 @@ class Game extends Component {
   }
 
   isCellEnabled = (cell) => {
-    return this.state.lastCell === cell || this.state.lastCell === -1; //&& this.state.myPlayer === this.state.player
+    return (this.state.lastCell === cell || this.state.lastCell === -1) && this.state.myPlayer === this.state.player;
   }
 
   checkGameWon = () => {
@@ -93,6 +136,7 @@ class Game extends Component {
         board={board}
         onCellChosen={this.onCellChosen}
         enabled={this.isCellEnabled}
+        onConfigCellSetter={this.onConfigCellSetter}
       />
     );
   }
@@ -104,12 +148,16 @@ class Game extends Component {
             {this.state.winner} is the winner!
           </td>
         );
-    } else {
+    } else if (this.state.player !== "") {
         return (
           <td className={"playerTurn " + this.state.player} colSpan={3}>
             {this.state.player}, your turn
           </td>
         );
+    } else {
+        return (<td colSpan={3}>
+            game key: {this.state.gameKey}
+        </td>)
     }
   }
 
