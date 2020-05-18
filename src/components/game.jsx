@@ -49,9 +49,8 @@ class Game extends Component {
     this.setState({socket: socket});
   }
 
-  setCell = (board, cell, owner) => {
-      console.log("Game.setCell():", board, cell, owner);
-      this.state.boardSetters[board](cell, owner);
+  setCell = (board, cell, owner, authority) => {
+      this.state.boardSetters[board](cell, owner, authority);
   }
 
   onConfigCellSetter = (board, setter) => {
@@ -145,7 +144,8 @@ class Game extends Component {
     if (this.state.winner !== "") {
         return (
           <td className={"winner " + this.state.winner} colSpan={3}>
-            {this.state.winner} is the winner!
+            {this.state.winner} is the winner!<br/>
+            <button type="button" onClick={this.props.restartGame} className="btn btn-light btn-block">Restart game</button>
           </td>
         );
     } else if (this.state.player !== "") {

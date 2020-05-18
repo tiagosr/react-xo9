@@ -26,7 +26,7 @@ io.on("connection", (socket) => {
     connections[socket.id] = {socket: socket, room: null, player: "X", name: ""}
 
     socket.on("new-game", (name) => {
-        let room_token = chance.word();
+        let room_token = chance.word({syllables:3});
         connections[socket.id].room = room_token;
         connections[socket.id].name = name;
         connections[socket.id].player = "X";

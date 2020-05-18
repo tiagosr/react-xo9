@@ -29,10 +29,13 @@ function App() {
     setGameLaunched(false);
     setConnectionFailureReason(reason);
   }
+  const handleRestartGame = (event) => {
+    setGameLaunched(false);
+  }
 
   const renderGame = (launched) => {
     if (launched) {
-      return <Game playerName={playerName} gameKey={gameKey} failedToConnect={failedToConnect}/>;
+      return <Game playerName={playerName} gameKey={gameKey} failedToConnect={failedToConnect} restartGame={handleRestartGame} />;
     } else {
       return (
         <form onSubmit={handleSubmit}>
