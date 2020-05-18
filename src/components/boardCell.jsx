@@ -6,13 +6,19 @@ class BoardCell extends Component {
     empty: true,
   };
 
+  setCell = (owner, authority) => {
+      console.log("cell", this.props.cell, "setCell(", owner, ")");
+      this.setState({ empty: false, owner: owner });
+      this.props.onCellChosen(this.props.cell, owner, authority);
+  }
+
+  componentDidMount() {
+    this.props.onConfigCellSetter(this.props.cell, this.setCell)
+  }
+
   onClick = () => {
     if (!this.props.enabled(this.props.board)) return;
-    this.setState({
-      empty: false,
-      owner: this.props.player,
-    });
-    this.props.onCellChosen(this.props.cell, this.props.player);
+    this.setCell(this.props.player, true);
   }
 
   renderButton() {

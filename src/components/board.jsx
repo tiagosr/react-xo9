@@ -3,12 +3,35 @@ import BoardCell from './boardCell';
 
 class Board extends Component {
   state = {
-    rows: Array(9).fill(""),
-    winner: ""
+    cells: Array(9).fill(""),
+    winner: "",
+    cellSetters: Array(9)
   };
 
+  componentDidMount() {
+    console.log("onConfigCellSetter", this.props.onConfigCellSetter)
+    this.props.onConfigCellSetter(this.props.board, this.setCell)
+  }
+
+  onConfigCellSetter = (cell, setter) => {
+      let setters = this.state.cellSetters;
+      setters[cell] = setter;
+      console.log(
+        "Board[",
+        this.props.board,
+        "].cellSetters =",
+        setters
+      );
+      this.setState({cellSetters: setters});
+  }
+
+  setCell = (cell, owner, authority) => {
+      console.log("setCell(", cell,",", owner, "):", this.state.cellSetters[cell])
+      this.state.cellSetters[cell](owner, authority);
+  }
+
   checkBoardWon() {
-    const r = this.state.rows;
+    const r = this.state.cells;
     let winner = this.state.winner
     // check rows
     if (r[0] !== "" && r[0] === r[1] && r[0] === r[2]) {
@@ -37,12 +60,12 @@ class Board extends Component {
     return winner
   }
 
-  onCellChosen = (cell, owner) => {
-    let newRows = this.state.rows;
-    newRows[cell] = owner
-    this.setState({rows: newRows});
+  onCellChosen = (cell, owner, authority) => {
+    let newCells = this.state.cells;
+    newCells[cell] = owner
+    this.setState({cells: newCells});
     const winner = this.checkBoardWon()
-    this.props.onCellChosen(this.props.board, cell, winner);
+    this.props.onCellChosen(this.props.board, cell, winner, authority);
   }
 
   renderBoardCell(cell) {
@@ -52,6 +75,7 @@ class Board extends Component {
           board={this.props.board}
           cell={cell}
           enabled={this.props.enabled}
+          onConfigCellSetter={this.onConfigCellSetter}
           onCellChosen={this.onCellChosen}
         />
       );
